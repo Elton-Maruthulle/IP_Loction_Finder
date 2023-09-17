@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your IP/Location</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="container2">
+        <h1 class="container3">Your Information</h1>
+
+        <p>Your IP Address: <span id="ipAddress"></span></p>
+        <p>Your Location: <span id="location"></span></p>
+        <p id="dateTime"></p>
+        <button class="container4" id="findMe">Find Me</button>
+      </div>
+    </div>
+
+    <script>
+      // Function to fetch the user's IP address
+      function getIPAddress() {
+        fetch("https://api64.ipify.org?format=json")
+          .then((response) => response.json())
+          .then((data) => {
+            const ipAddress = data.ip;
+            document.getElementById("ipAddress").textContent = ipAddress;
+            getLocation(ipAddress);
+          })
+          .catch((error) => {
+            console.error("Error fetching IP address:", error);
+          });
+      }
+
+      // Function to fetch the user's location based on IP address
+      function getLocation(ipAddress) {
+        fetch(`https://ipinfo.io/${ipAddress}/json`)
+          .then((response) => response.json())
+          .then((data) => {
+            const location = `${data.city}, ${data.region}, ${data.country}`;
+            document.getElementById("location").textContent = location;
+          })
+          .catch((error) => {
+            console.error("Error fetching location:", error);
+          });
+      }
+
+      // Function to display the current date and time
+      function displayDateTime() {
+        const now = new Date();
+        const dateTimeElement = document.getElementById("dateTime");
+        dateTimeElement.textContent = `Current Date and Time: ${now.toLocaleString()}`;
+      }
+
+      // Add a click event listener to the "Find Me" button
+      document.getElementById("findMe").addEventListener("click", () => {
+        getIPAddress();
+        getLocation();
+      });
+
+      // Call the displayDateTime function when the page loads
+      displayDateTime();
+    </script>
+  </body>
+</html>
